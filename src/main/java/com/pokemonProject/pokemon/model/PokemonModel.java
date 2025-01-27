@@ -1,7 +1,6 @@
 package com.pokemonProject.pokemon.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
@@ -11,13 +10,9 @@ public class PokemonModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID idPokemon;
-
-    @NotNull
     private String nome;
-
-    @NotNull
+    private int numPokedex;
     private String tipo;
-
     private String urlPokemon;
     private String descricao;
 
@@ -29,19 +24,27 @@ public class PokemonModel {
         this.idPokemon = idPokemon;
     }
 
-    public @NotNull String getNome() {
+    public String getNome() {
         return nome;
     }
 
-    public void setNome(@NotNull String nome) {
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public @NotNull String getTipo() {
+    public int getNumPokedex() {
+        return numPokedex;
+    }
+
+    public void setNumPokedex(int numPokedex) {
+        this.numPokedex = numPokedex;
+    }
+
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(@NotNull String tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 

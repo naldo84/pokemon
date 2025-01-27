@@ -1,21 +1,30 @@
 package com.pokemonProject.pokemon.controller;
 
+import com.pokemonProject.pokemon.dto.PokemonDto;
 import com.pokemonProject.pokemon.model.PokemonModel;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.pokemonProject.pokemon.repository.PokemonRepository;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class PokemonController {
 
-    List<String> pokemons = new ArrayList<>();
+    @Autowired
+    PokemonRepository pokemonRepository; //inclusão do ponto de injeção
 
-    @GetMapping("/pokemons")
-    public List<String> consultarPokemons(){
-        pokemons.add("Pikachu");
-        pokemons.add("Charmander");
-        return pokemons;
+    @PostMapping("/pokemons")
+    public ResponseEntity<PokemonModel> cadatrarPokemon(@RequestBody @Valid PokemonDto pokemonDto){
+        var pokemonModel = new PokemonModel();
+        BeanUtils.copyProperties(pokemonDto, pokemonModel);
+        System.out.println("PokemonModel" + pokemonModel);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(pokemonRepository.save(pokemonModel));
     }
 }
