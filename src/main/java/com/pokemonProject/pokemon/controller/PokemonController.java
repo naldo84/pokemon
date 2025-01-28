@@ -60,4 +60,13 @@ public class PokemonController {
 
         return ResponseEntity.ok().body(pokemonRepository.save(pokemonModel));
     }
+
+    @DeleteMapping("/pokemons/numPokedex/{numPokedex}")
+    public ResponseEntity<Object> excluirPokemon(@PathVariable(value = "numPokedex") int numPokedex){
+        Optional<PokemonModel> pokemonEncontrado = Optional.ofNullable(pokemonRepository.findByNumPokedex(numPokedex));
+
+        pokemonRepository.delete(pokemonEncontrado.get());
+
+        return ResponseEntity.ok().body("Pokemon de nro " + pokemonEncontrado.get().getNumPokedex() + " deletado!");
+    }
 }
