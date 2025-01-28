@@ -48,4 +48,16 @@ public class PokemonController {
 
         return ResponseEntity.ok().body(pokemonEncontrado.get());
     }
+
+    @PutMapping("/pokemons/numPokedex/{numPokedex}")
+    public ResponseEntity<PokemonModel> alterarPokemon(@PathVariable (value = "numPokedex") int numPokedex,
+                                                       @RequestBody @Valid PokemonDto pokemonDto){
+        Optional<PokemonModel> pokemonEncontrado = Optional.ofNullable(pokemonRepository.findByNumPokedex(numPokedex));
+
+        var pokemonModel =pokemonEncontrado.get();
+
+        BeanUtils.copyProperties(pokemonDto, pokemonModel);
+
+        return ResponseEntity.ok().body(pokemonRepository.save(pokemonModel));
+    }
 }
