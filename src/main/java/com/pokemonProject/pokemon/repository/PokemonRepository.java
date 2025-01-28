@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface PokemonRepository extends JpaRepository<PokemonModel, UUID> {
+
+    PokemonModel findByNumPokedex(int numPokedex);
 }
