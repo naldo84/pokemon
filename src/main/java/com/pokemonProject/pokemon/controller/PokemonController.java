@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,12 +23,20 @@ public class PokemonController {
     PokemonRepository pokemonRepository; //inclusão do ponto de injeção
 
     @PostMapping("/pokemons")
-    public ResponseEntity<PokemonModel> cadatrarPokemon(@RequestBody @Valid PokemonDto pokemonDto){
-        var pokemonModel = new PokemonModel();
-        BeanUtils.copyProperties(pokemonDto, pokemonModel);
-        System.out.println("PokemonModel" + pokemonModel);
+    public ResponseEntity<Object> cadatrarPokemon(@RequestBody @Valid PokemonDto pokemonDto){
+        Optional<PokemonModel> pokemonExistente = pokemonRepository.findByNumPokedex(pokemonDto.numPokedex());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(pokemonRepository.save(pokemonModel));
+        if (pokemonExistente.isPresent()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pokemon já cadastrado");
+        }
+
+        var pokemonModel = new PokemonModel();
+
+        BeanUtils.copyProperties(pokemonDto, pokemonModel);
+        PokemonModel pokemonSalvo = pokemonRepository.save(pokemonModel);
+        URI location = URI.create("/pokemons/" + pokemonSalvo.getNumPokedex());
+
+        return ResponseEntity.created(location).body(pokemonSalvo);
     }
 
     @GetMapping("/pokemons")
@@ -35,27 +44,35 @@ public class PokemonController {
         return ResponseEntity.ok().body(pokemonRepository.findAll());
     }
 
-    @GetMapping("/pokemon/{id}")   //Pesquisa pelo id do BD
-    public ResponseEntity<PokemonModel> consultarPokemonById(@PathVariable(value = "id")UUID id){
+    @GetMapping("/pokemons/{id}")   //Pesquisa pelo id do BD
+    public ResponseEntity<Object> consultarPokemonById(@PathVariable(value = "id")UUID id){
         Optional<PokemonModel> pokemonEncontrado = pokemonRepository.findById(id);
+
+        if (pokemonEncontrado.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokémon com o ID fornecido não encontrado!");
 
         return ResponseEntity.ok().body(pokemonEncontrado.get());
     }
 
     @GetMapping("/pokemons/numPokedex/{numPokedex}")
-    public ResponseEntity<PokemonModel> consultarByNumPokedex(@PathVariable(value = "numPokedex") int numPokedex){
-        Optional<PokemonModel> pokemonEncontrado = Optional.ofNullable(pokemonRepository.findByNumPokedex(numPokedex));
+    public ResponseEntity<Object> consultarByNumPokedex(@PathVariable(value = "numPokedex") int numPokedex){
+        Optional<PokemonModel> pokemonEncontrado = pokemonRepository.findByNumPokedex(numPokedex);
+
+        if (pokemonEncontrado.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokémon com o ID fornecido não encontrado!");
 
         return ResponseEntity.ok().body(pokemonEncontrado.get());
     }
 
     @PutMapping("/pokemons/numPokedex/{numPokedex}")
-    public ResponseEntity<PokemonModel> alterarPokemon(@PathVariable (value = "numPokedex") int numPokedex,
+    public ResponseEntity<Object> alterarPokemon(@PathVariable (value = "numPokedex") int numPokedex,
                                                        @RequestBody @Valid PokemonDto pokemonDto){
-        Optional<PokemonModel> pokemonEncontrado = Optional.ofNullable(pokemonRepository.findByNumPokedex(numPokedex));
+        Optional<PokemonModel> pokemonEncontrado = pokemonRepository.findByNumPokedex(numPokedex);
+
+        if (pokemonEncontrado.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokémon com o ID fornecido não encontrado!");
 
         var pokemonModel =pokemonEncontrado.get();
-
         BeanUtils.copyProperties(pokemonDto, pokemonModel);
 
         return ResponseEntity.ok().body(pokemonRepository.save(pokemonModel));
@@ -63,10 +80,32 @@ public class PokemonController {
 
     @DeleteMapping("/pokemons/numPokedex/{numPokedex}")
     public ResponseEntity<Object> excluirPokemon(@PathVariable(value = "numPokedex") int numPokedex){
-        Optional<PokemonModel> pokemonEncontrado = Optional.ofNullable(pokemonRepository.findByNumPokedex(numPokedex));
+        Optional<PokemonModel> pokemonEncontrado = pokemonRepository.findByNumPokedex(numPokedex);
+
+        if (pokemonEncontrado.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokémon com o ID fornecido não encontrado!");
 
         pokemonRepository.delete(pokemonEncontrado.get());
 
         return ResponseEntity.ok().body("Pokemon de nro " + pokemonEncontrado.get().getNumPokedex() + " deletado!");
+    }
+
+    @DeleteMapping("/pokemons/{id}")
+    public ResponseEntity<Object> excluirPokemon(@PathVariable(value = "id") UUID id){
+        Optional<PokemonModel> pokemonEncontrado = pokemonRepository.findById(id);
+
+        if (pokemonEncontrado.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokémon com o ID fornecido não encontrado!");
+
+        pokemonRepository.delete(pokemonEncontrado.get());
+
+        return ResponseEntity.ok().body("Pokemon de nro " + pokemonEncontrado.get().getNumPokedex() + " deletado!");
+    }
+
+    @DeleteMapping("pokemons/delete")
+    public ResponseEntity<Object> excluirTodosPokemons(){
+        pokemonRepository.deleteAll();
+
+        return ResponseEntity.ok().body("Todos os pokemons foram excluídos!");
     }
 }
