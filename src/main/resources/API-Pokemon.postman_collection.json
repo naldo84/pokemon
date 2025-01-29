@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "5a20f8cf-1a9b-4478-8eb7-4810689ae9e5",
+		"name": "API-Pokemon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30961815"
+	},
+	"item": [
+		{
+			"name": "Cadastrar Pokemon",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"Pikachu 9\",\r\n    \"numPokedex\": 9,\r\n    \"tipo\": \"eletrico\",    \r\n    \"urlPokemon\": \"https://i0.wp.com/pokemythology.net/conteudo/imgs/home/0151.png?w=640&ssl=1\",\r\n    \"descricao\": \"Descrição do Pikachu 9. Protagonista do anime :D \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pokemons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pokemons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Pokemons",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pokemons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pokemons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Pokemon by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Pikachu\",\r\n    \"tipo\": \"Elétrico\",\r\n    \"numPokedex\": 25,\r\n    \"urlPokemon\": \"\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pokemons/d53d07e0-44da-4153-b4f4-1ea0b32789akkkkkkkkkkkkk",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pokemons",
+						"d53d07e0-44da-4153-b4f4-1ea0b32789akkkkkkkkkkkkk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Pokemon by numPokedex",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pokemons/numPokedex/kkkkkkk",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pokemons",
+						"numPokedex",
+						"kkkkkkk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alterar Pokemon",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n    \"nome\": \"Pikachu 6 - Alteração\",\r\n    \"numPokedex\": 6,\r\n    \"tipo\": \"eletrico 16\",    \r\n    \"urlPokemon\": \"https://i0.wp.com/pokemythology.net/conteudo/imgs/home/0151.png?w=640&ssl=1\",\r\n    \"descricao\": \"Descrição do Pikachu 16. Protagonista do anime :D \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pokemons/numPokedex/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pokemons",
+						"numPokedex",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluir Pokemon By Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pokemons/d53d07e0-44da-4153-b4f4-1ea0b32789a1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pokemons",
+						"d53d07e0-44da-4153-b4f4-1ea0b32789a1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluir Pokemon By numPokedex",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pokemons/numPokedex/9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pokemons",
+						"numPokedex",
+						"9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluir TODOS os pokemons",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pokemons/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pokemons",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
