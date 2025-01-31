@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,14 +36,16 @@ public class PokemonService {
     }
 
     public List<PokemonModel> consultarPokemons() {
-        return pokemonRepository.findAll();
+        List<PokemonModel> listaDePokemons = pokemonRepository.findAll();
+
+        return listaDePokemons.isEmpty() ? Collections.emptyList() : listaDePokemons;
     }
 
     public PokemonModel consultarPokemonById(UUID id) {
         Optional<PokemonModel> consultarPokemon = pokemonRepository.findById(id);
 
         if (consultarPokemon.isEmpty())
-            throw new RuntimeException("Pokemon não localizado!");
+            throw new RuntimeException("Pokémon não localizado!");
 
         return consultarPokemon.get();
     }
@@ -51,7 +54,7 @@ public class PokemonService {
         Optional<PokemonModel> consultarPokemon = pokemonRepository.findByNumPokedex(numPokedex);
 
         if (consultarPokemon.isEmpty()) {
-            throw new RuntimeException("Pokemon não localizado!");
+            throw new RuntimeException("Pokémon não localizado!");
         }
 
         return consultarPokemon.get();
@@ -61,7 +64,7 @@ public class PokemonService {
         Optional<PokemonModel> consultarPokemon = pokemonRepository.findByNumPokedex(numPokedex);
 
         if (consultarPokemon.isEmpty()) {
-            throw new RuntimeException("Pokemon não localizado!");
+            throw new RuntimeException("Pokémon não localizado!");
         }
 
         var pokemonModel = consultarPokemon.get();
@@ -75,7 +78,7 @@ public class PokemonService {
         Optional<PokemonModel> consultarPokemon = pokemonRepository.findByNumPokedex(numPokedex);
 
         if (consultarPokemon.isEmpty()) {
-            throw new RuntimeException("Pokemon não localizado!");
+            throw new RuntimeException("Pokémon não localizado!");
         }
 
         pokemonRepository.delete(consultarPokemon.get());
@@ -85,28 +88,23 @@ public class PokemonService {
         Optional<PokemonModel> consultarPokemon = pokemonRepository.findById(id);
 
         if (consultarPokemon.isEmpty()) {
-            throw new RuntimeException("Pokemon não localizado!");
+            throw new RuntimeException("Pokémon não localizado!");
         }
 
         pokemonRepository.delete(consultarPokemon.get());
     }
 
-    public boolean excluirAll(){
+    public void excluirAll(){
         long count = pokemonRepository.count();
 
-        if (count == 0)
-            return false;
-
+        if (count == 0){
+            throw new RuntimeException("Não há pokemons para excluir!");
+        }
         try {
-            logger.info("Iniciando a exclusão de todos os pokemons...");
             pokemonRepository.deleteAll();
-            logger.info("Todos os pokemons foram excluídos com sucesso!");
-            return true;
 
         } catch (Exception e){
-            logger.error("Erro ao tentar excluir os Pokémons: {}", e.getMessage());
             throw new RuntimeException("Erro ao excluir os pokemons!");
-
         }
     }
 }

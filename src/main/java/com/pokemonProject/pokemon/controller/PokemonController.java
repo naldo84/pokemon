@@ -48,7 +48,7 @@ public class PokemonController {
             return ResponseEntity.ok().body(pokemonEncontrado);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokemon não localizado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -60,7 +60,7 @@ public class PokemonController {
             return ResponseEntity.ok().body(pokemonEncontrado);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokemon não localizado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public class PokemonController {
             return ResponseEntity.ok().body(pokemonEncontrado);
 
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokemon não localizado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
         }
     }
@@ -87,7 +87,7 @@ public class PokemonController {
             return ResponseEntity.ok().body("Pokemon " + numPokedex + " deletado!!");
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokemon com o ID fornecido não encontrado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ public class PokemonController {
             return ResponseEntity.ok().body("Pokemon " + id + " deletado!!");
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokemon com o ID fornecido não encontrado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -109,11 +109,9 @@ public class PokemonController {
     public ResponseEntity<Object> excluirTodosPokemons(){
         try {
             pokemonService.excluirAll();
-
             return ResponseEntity.accepted().body("Todos os pokemons foram excluídos!");
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Não há pokemons para serem excluídos!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }
